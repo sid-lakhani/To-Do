@@ -3,13 +3,16 @@ import React, { useEffect, useState } from 'react'
 import TodoCard from './TodoCard'
 import { doc, setDoc } from 'firebase/firestore'
 import { db } from '../firebase'
+import useFetchTodos from '../hooks/fetchTodos'
 
 export default function UserDashboard() {
     const { userInfo, currentUser } = useAuth()
-    const [addTodo, setAddTodo] = useState(false)
+    const [addTodo, setAddTodo] = useState('')
     const [todo, setTodo] = useState('')
-    const [todoList, setTodoList] = useState({})
-    console.log(todoList)
+
+    const { todos, setTodos, loading, error } = useFetchTodos()
+
+    console.log(todos)
 
     // useEffect(() => {
     //     if (!userInfo || Object.keys(userInfo).length === 0) {
@@ -25,28 +28,31 @@ export default function UserDashboard() {
 
     async function handleAddTodo() {
         if (!todo) { return }
-        const newKey = Object.keys(todoList).length === 0 ? 1 : Math.max(...Object.keys(todoList)) + 1
-        setTodoList({ ...todoList, [newKey]: todo })       
-        setTodo('')
+        const newKey = Object.keys(todos).length === 0 ? 1 : Math.max(...Object.keys(todos)) + 1
+        setTodos({ ...todos, [newKey]: todo })
         const userRef = doc(db, 'users', currentUser.uid)
         await setDoc(userRef, {
             'todos': {
                 [newKey]: todo
             }
         }, { merge: true })
+        setTodo('')
     }
     return (
-        <div className='w-full max-w-[65ch] text-xs sm:text-sm mx-auto flex flex-col gap-3 sm:gap-5'>
+        <div className='w-full max-w-[65ch] text-xs sm:text-sm mx-auto flex flex-1 flex-col gap-3 sm:gap-5'>
             <div className='flex items-stretch'>
                 <input type="text" placeholder='Enter TODO' onChange={(e) => setTodo(e.target.value)} onKeyDown={handleKeyDown} className='outline-none p-3 text-base sm:text-lg text-slate-900 flex-1' />
                 <button onClick={handleAddTodo} className='w-fit px-4 sm:px-6 py-2 sm:py-3 bg-slate-400 text-white font-medium text-base duration-300 hover:bg-slate-700'>ADD</button>
             </div>
-            {userInfo && (
+            {(userInfo && loading) && (<div className='flex-1 grid place-items-center'>
+                <i className="fa-solid fa-spinner fa-spin text-6xl"></i>
+            </div>)}
+            {(userInfo && !loading) && (
                 <>
-                    {Object.keys(todoList).map((todo, i) => {
+                    {Object.keys(todos).map((todo, i) => {
                         return (
                             <TodoCard key={i}>
-                                {todoList[todo]}
+                                {todos[todo]}
                             </TodoCard>
                         )
                     })}
