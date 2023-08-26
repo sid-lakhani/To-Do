@@ -7,12 +7,10 @@ import useFetchTodos from '../hooks/fetchTodos'
 
 export default function UserDashboard() {
     const { userInfo, currentUser } = useAuth()
-    const [addTodo, setAddTodo] = useState('')
+    const [edit, setEdit] = useState(false)
     const [todo, setTodo] = useState('')
 
     const { todos, setTodos, loading, error } = useFetchTodos()
-
-    console.log(todos)
 
     // useEffect(() => {
     //     if (!userInfo || Object.keys(userInfo).length === 0) {
@@ -36,7 +34,6 @@ export default function UserDashboard() {
                 [newKey]: todo
             }
         }, { merge: true })
-        setTodo('')
     }
 
     return (
@@ -48,7 +45,7 @@ export default function UserDashboard() {
             {(userInfo && loading) && (<div className='flex-1 grid place-items-center'>
                 <i className="fa-solid fa-spinner fa-spin text-6xl"></i>
             </div>)}
-            {(userInfo && !loading) && (
+            {(userInfo && !loading && Object.keys(todos).length > 0) && (
                 <>
                     {Object.keys(todos).map((todo, i) => {
                         return (
