@@ -19,12 +19,7 @@ export default function Modal(props) {
                 <h1 className='text-3xl font-extrabold select-none sm:text-6xl'>MENU</h1>
                 <i onClick={() => setOpenModal(false)} className="fa-solid fa-xmark duration-300 hover:rotate-90 cursor-pointer text-2xl sm:text-3xl"></i>
             </div>
-            <div className='px-4 py-4 flex flex-col gap-4'>
-                <h2 onClick = {() => {
-                    setOpenModal(false)
-                }} className='select-none duration-300 hover:pl-2 cursor-pointer'>Completed Todos</h2>
-            </div>
-            <div className='px-4 flex flex-col gap-3'>
+            <div className='p-4 flex flex-col gap-3'>
                 <h2 onClick = {() => {
                     logout()
                     setOpenModal(false)
