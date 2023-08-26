@@ -34,9 +34,9 @@ export default function UserDashboard() {
             'todos': {
                 [newKey]: todo
             }
-        }, { merge: true })
+        }, { merge: true })       
         setTodo('')
-    }
+    } 
     
     async function handleEditTodo() {
         if (!edittedValue) { return }
