@@ -19,7 +19,7 @@ export default function UserDashboard() {
     //     }
     // }, [userInfo])
 
-    function handleKeyDown(event) {
+    function handleAddKeyDown(event) {
         if (event.key === 'Enter') {
             handleAddTodo();
         }
@@ -63,7 +63,7 @@ export default function UserDashboard() {
     return (
         <div className='w-full max-w-[65ch] text-xs sm:text-sm mx-auto flex flex-1 flex-col gap-3 sm:gap-5'>
             <div className='flex items-stretch'>
-                <input type="text" placeholder='Enter TODO' onChange={(e) => setTodo(e.target.value)} onKeyDown={handleKeyDown} className='outline-none p-3 text-base sm:text-lg text-slate-900 flex-1' />
+                <input type="text" placeholder='Enter TODO' onChange={(e) => setTodo(e.target.value)} onKeyDown={handleAddKeyDown} className='outline-none p-3 text-base sm:text-lg text-slate-900 flex-1' />
                 <button onClick={handleAddTodo} className='w-fit px-4 sm:px-6 py-2 sm:py-3 bg-slate-400 text-white font-medium text-base duration-300 hover:bg-slate-700'>ADD</button>
             </div>
             {(userInfo && loading) && (<div className='flex-1 grid place-items-center'>
