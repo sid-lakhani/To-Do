@@ -7,7 +7,7 @@ import useFetchTodos from '../hooks/fetchTodos'
 
 export default function UserDashboard() {
     const { userInfo, currentUser } = useAuth()
-    const [edit, setEdit] = useState('')
+    const [edit, setEdit] = useState(false)
     const [todo, setTodo] = useState('')
 
     const { todos, setTodos, loading, error } = useFetchTodos()
