@@ -9,6 +9,7 @@ export default function UserDashboard() {
     const { userInfo, currentUser } = useAuth()
     const [edit, setEdit] = useState(null)
     const [todo, setTodo] = useState('')
+    const [edittedValue, setEdittedValue] = useState('')
 
     const { todos, setTodos, loading, error } = useFetchTodos()
 
@@ -37,9 +38,12 @@ export default function UserDashboard() {
     }
 
     function handleAddEdit(todoKey){
-        return () => setEdit(todoKey)
+        return () => {
+            setEdit(todoKey)
+            setEdittedValue(todos[todoKey])
+        }
     }
-
+    
     return (
         <div className='w-full max-w-[65ch] text-xs sm:text-sm mx-auto flex flex-1 flex-col gap-3 sm:gap-5'>
             <div className='flex items-stretch'>
@@ -53,7 +57,7 @@ export default function UserDashboard() {
                 <>
                     {Object.keys(todos).map((todo, i) => {
                         return (
-                            <TodoCard key={i} handleAddEdit={handleAddEdit} edit={edit} todoKey={todo}>
+                            <TodoCard key={i} handleAddEdit={handleAddEdit} edit={edit} todoKey={todo} edittedValue={edittedValue} setEdittedValue={setEdittedValue}>
                                 {todos[todo]}
                             </TodoCard>
                         )
