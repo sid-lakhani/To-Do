@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { doc, getDoc } from 'firebase/firestore'
 import { useAuth } from '../context/AuthContext'
+import { db } from '../firebase'
 
 export default function useFetchTodos() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
-    const [todos, setTodos] = useState(true)
+    const [todos, setTodos] = useState({})
 
     const { currentUser } = useAuth()
 
@@ -26,6 +27,7 @@ export default function useFetchTodos() {
                 setLoading(false)
             }
         }
+        console.log('fetching data...')
         fetchData()
     }, [])
 
