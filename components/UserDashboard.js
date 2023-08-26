@@ -49,7 +49,7 @@ export default function UserDashboard() {
                 <>
                     {Object.keys(todos).map((todo, i) => {
                         return (
-                            <TodoCard key={i}>
+                            <TodoCard key={i} setEdit={setEdit} edit={edit}>
                                 {todos[todo]}
                             </TodoCard>
                         )
