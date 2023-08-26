@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function Footer() {
     return (
-        <div className='flex justify-center py-justify items-center gap-5 py-3 shadow'>
+        <div className='flex justify-center items-center gap-5 py-3'>
             <a href ='https://www.instagram.com/sidlakhani_/'>
                 <i className="fa-brands fa-instagram duration-300 hover:opacity-30 cursor-pointer"></i>
             </a>
