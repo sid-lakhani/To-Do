@@ -1,7 +1,7 @@
 import { useAuth } from '@/context/AuthContext'
 import React, { useEffect, useState } from 'react'
 import TodoCard from './TodoCard'
-import { doc, setDoc } from 'firebase/firestore'
+import { doc, setDoc, deleteField } from 'firebase/firestore'
 import { db } from '../firebase'
 import useFetchTodos from '../hooks/fetchTodos'
 
@@ -59,6 +59,21 @@ export default function UserDashboard() {
         }
     }
 
+    function handleDelete(todoKey){
+        return async () => {
+            const tempObj = {...todos}
+
+            delete tempObj[todoKey]
+            setTodos(tempObj)
+            const userRef = doc(db, 'users', currentUser.uid)
+            await setDoc(userRef, {
+                'todos': {
+                    [todoKey]: deleteField()
+                }
+            }, { merge: true })
+        }
+    }
+
 
     return (
         <div className='w-full max-w-[65ch] text-xs sm:text-sm mx-auto flex flex-1 flex-col gap-3 sm:gap-5'>
@@ -66,14 +81,14 @@ export default function UserDashboard() {
                 <input type="text" placeholder='Enter TODO' onChange={(e) => setTodo(e.target.value)} onKeyDown={handleAddKeyDown} className='outline-none p-3 text-base sm:text-lg text-slate-900 flex-1' />
                 <button onClick={handleAddTodo} className='w-fit px-4 sm:px-6 py-2 sm:py-3 bg-slate-400 text-white font-medium text-base duration-300 hover:bg-slate-700'>ADD</button>
             </div>
-            {(userInfo && loading) && (<div className='flex-1 grid place-items-center'>
+            {(loading) && (<div className='flex-1 grid place-items-center'>
                 <i className="fa-solid fa-spinner fa-spin text-6xl"></i>
             </div>)}
-            {(userInfo && !loading && Object.keys(todos).length > 0) && (
+            {(!loading) && (
                 <>
                     {Object.keys(todos).map((todo, i) => {
                         return (
-                            <TodoCard handleEditTodo={handleEditTodo} key={i} handleAddEdit={handleAddEdit} edit={edit} todoKey={todo} edittedValue={edittedValue} setEdittedValue={setEdittedValue}>
+                            <TodoCard handleEditTodo={handleEditTodo} key={i} handleAddEdit={handleAddEdit} edit={edit} todoKey={todo} edittedValue={edittedValue} setEdittedValue={setEdittedValue} handleDelete={handleDelete}>
                                 {todos[todo]}
                             </TodoCard>
                         )
