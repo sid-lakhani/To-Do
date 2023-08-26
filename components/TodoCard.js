@@ -8,7 +8,6 @@ export default function TodoCard(props) {
                 {!edit ? <>{children}</>: (
                     <input className='bg-inherit text-white-300 p-2 outline-none' value={edittedValue} onChange={(e) => setEdittedValue(e.target.value)}/>
                 )}
-                {children}
             </div>
             <div className='flex items-center'>
                 <i onClick={() => setEdit(true)} className="fa-solid fa-pen-to-square px-2 duration-300 hover:opacity-50 hover:scale-125 cursor-pointer"></i>
