@@ -35,6 +35,21 @@ export default function UserDashboard() {
                 [newKey]: todo
             }
         }, { merge: true })
+        setTodo('')
+    }
+    
+    async function handleEditTodo() {
+        if (!edittedValue) { return }
+        const newKey = edit
+        setTodos({ ...todos, [newKey]: edittedValue })
+        const userRef = doc(db, 'users', currentUser.uid)
+        await setDoc(userRef, {
+            'todos': {
+                [newKey]: edittedValue
+            }
+        }, { merge: true })
+        setEdit(null)
+        setEdittedValue('')
     }
 
     function handleAddEdit(todoKey){
@@ -43,7 +58,8 @@ export default function UserDashboard() {
             setEdittedValue(todos[todoKey])
         }
     }
-    
+
+
     return (
         <div className='w-full max-w-[65ch] text-xs sm:text-sm mx-auto flex flex-1 flex-col gap-3 sm:gap-5'>
             <div className='flex items-stretch'>
@@ -57,7 +73,7 @@ export default function UserDashboard() {
                 <>
                     {Object.keys(todos).map((todo, i) => {
                         return (
-                            <TodoCard key={i} handleAddEdit={handleAddEdit} edit={edit} todoKey={todo} edittedValue={edittedValue} setEdittedValue={setEdittedValue}>
+                            <TodoCard handleEditTodo={handleEditTodo} key={i} handleAddEdit={handleAddEdit} edit={edit} todoKey={todo} edittedValue={edittedValue} setEdittedValue={setEdittedValue}>
                                 {todos[todo]}
                             </TodoCard>
                         )
