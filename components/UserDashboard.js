@@ -1,23 +1,17 @@
 import { useAuth } from '@/context/AuthContext'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import TodoCard from './TodoCard'
 import { doc, setDoc, deleteField } from 'firebase/firestore'
 import { db } from '../firebase'
 import useFetchTodos from '../hooks/fetchTodos'
 
 export default function UserDashboard() {
-    const { userInfo, currentUser } = useAuth()
+    const { currentUser } = useAuth()
     const [edit, setEdit] = useState(null)
     const [todo, setTodo] = useState('')
     const [edittedValue, setEdittedValue] = useState('')
 
-    const { todos, setTodos, loading, error } = useFetchTodos()
-
-    // useEffect(() => {
-    //     if (!userInfo || Object.keys(userInfo).length === 0) {
-    //         setAddTodo(true)
-    //     }
-    // }, [userInfo])
+    const { todos, setTodos, loading, completedTodos, setCompletedTodos } = useFetchTodos()
 
     function handleAddKeyDown(event) {
         if (event.key === 'Enter') {
@@ -28,28 +22,30 @@ export default function UserDashboard() {
     async function handleAddTodo() {
         if (!todo) { return }
         const newKey = Object.keys(todos).length === 0 ? 1 : Math.max(...Object.keys(todos)) + 1
-        setTodos({ ...todos, [newKey]: todo })
-        const userRef = doc(db, 'users', currentUser.uid)
+        const newTodos = { ...todos, [newKey]: todo };
+        
+        setTodos(newTodos);
+        const userRef = doc(db, 'users', currentUser.uid);
         await setDoc(userRef, {
-            'todos': {
-                [newKey]: todo
-            }
-        }, { merge: true })       
-        setTodo('')
+            todos: newTodos
+        }, { merge: true });
+        
+        setTodo('');
     } 
     
     async function handleEditTodo() {
         if (!edittedValue) { return }
         const newKey = edit
-        setTodos({ ...todos, [newKey]: edittedValue })
-        const userRef = doc(db, 'users', currentUser.uid)
+        const newTodos = { ...todos, [newKey]: edittedValue };
+        
+        setTodos(newTodos);
+        const userRef = doc(db, 'users', currentUser.uid);
         await setDoc(userRef, {
-            'todos': {
-                [newKey]: edittedValue
-            }
-        }, { merge: true })
-        setEdit(null)
-        setEdittedValue('')
+            todos: newTodos
+        }, { merge: true });
+        
+        setEdit(null);
+        setEdittedValue('');
     }
 
     function handleAddEdit(todoKey){
@@ -74,6 +70,26 @@ export default function UserDashboard() {
         }
     }
 
+    async function handleCompleteTodo(todoKey) {
+        const completedTodo = todos[todoKey]
+        const uniqueKey = Date.now().toString()
+        setCompletedTodos((prevCompletedTodos) => ({
+            ...prevCompletedTodos,
+            [uniqueKey]: completedTodo,
+        }))
+        const updatedTodos = { ...todos };
+        delete updatedTodos[todoKey]
+        const userRef = doc(db, 'users', currentUser.uid);
+        await setDoc(userRef, {
+            todos: updatedTodos,
+            completedTodos: {
+                ...completedTodos,
+                [uniqueKey]: completedTodo,
+            },
+        });
+        setTodos(updatedTodos)
+    }
+    
 
     return (
         <div className='w-full max-w-[65ch] text-xs sm:text-sm mx-auto flex flex-1 flex-col gap-3 sm:gap-5'>
@@ -86,16 +102,44 @@ export default function UserDashboard() {
             </div>)}
             {(!loading) && (
                 <>
-                    {Object.keys(todos).map((todo, i) => {
-                        return (
-                            <TodoCard handleEditTodo={handleEditTodo} key={i} handleAddEdit={handleAddEdit} edit={edit} todoKey={todo} edittedValue={edittedValue} setEdittedValue={setEdittedValue} handleDelete={handleDelete}>
-                                {todos[todo]}
-                            </TodoCard>
-                        )
-                    })}
+                <h2 className="text-lg font-semibold">Todos:</h2>
+                {Object.keys(todos).map((todoKey, i) => {
+                    return (
+                    <TodoCard 
+                        handleEditTodo={handleEditTodo} 
+                        handleAddEdit={handleAddEdit} 
+                        key={i} 
+                        edit={edit} 
+                        todoKey={todoKey} 
+                        edittedValue={edittedValue} 
+                        setEdittedValue={setEdittedValue} 
+                        handleDelete={handleDelete}
+                        handleCompleteTodo={() => handleCompleteTodo(todoKey)}
+                        isCompletedTodo={false}>
+                        {todos[todoKey]}
+                    </TodoCard>
+                    );
+                })}
+                <h2 className="text-lg font-semibold mt-4">Completed Todos:</h2>
+                {Object.keys(completedTodos).sort((a, b) => b - a).map((completedTodoKey, i) => {
+                    return (
+                    <TodoCard 
+                        handleEditTodo={handleEditTodo} 
+                        handleAddEdit={handleAddEdit} 
+                        key={i} 
+                        edit={edit} 
+                        todoKey={completedTodoKey} 
+                        edittedValue={edittedValue} 
+                        setEdittedValue={setEdittedValue} 
+                        handleDelete={handleDelete}
+                        handleCompleteTodo={() => handleCompleteTodo(completedTodoKey)}
+                        isCompletedTodo={true}>
+                        {completedTodos[completedTodoKey]}
+                    </TodoCard>
+                    );
+                })}
                 </>
             )}
-            {/* {!addTodo && <button onClick={() => setAddTodo(true)} className='text-white-300 border border-solid border-white-300 py-2 text-center uppercase text-lg duration-300 hover:opacity-30'>ADD TODO</button>} */}
         </div>
     )
 }
