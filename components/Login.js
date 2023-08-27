@@ -42,7 +42,7 @@ export default function Login() {
                 <input 
                     value={email}
                     id='email' 
-                    onChange={(e) => setEmail(e.target.value)} 
+                    onChange={(e) => setEmail(e.target.value.toLowerCase())} 
                     type="text" 
                     placeholder='Email Address' 
                     onKeyDown= {handleKeyDown} 
