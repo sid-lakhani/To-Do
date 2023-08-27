@@ -70,21 +70,19 @@ export default function UserDashboard() {
 
     async function handleCompleteTodo(todoKey) {
         const completedTodo = todos[todoKey]
-        const uniqueKey = Date.now().toString()
-        setCompletedTodos((prevCompletedTodos) => ({
-            ...prevCompletedTodos,
-            [uniqueKey]: completedTodo,
-        }))
-        const updatedTodos = { ...todos };
+        const newKey = Object.keys(completedTodos).length === 0 ? 1 : Math.max(...Object.keys(completedTodos)) + 1
+        const newCompletedTodos = {
+            ...completedTodos,
+            [newKey]: completedTodo,
+        }
+        setCompletedTodos(newCompletedTodos)
+        const updatedTodos = { ...todos }
         delete updatedTodos[todoKey]
-        const userRef = doc(db, 'users', currentUser.uid);
+        const userRef = doc(db, 'users', currentUser.uid)
         await setDoc(userRef, {
             todos: updatedTodos,
-            completedTodos: {
-                ...completedTodos,
-                [uniqueKey]: completedTodo,
-            },
-        });
+            completedTodos: newCompletedTodos, 
+            },)
         setTodos(updatedTodos)
     }
 
@@ -113,7 +111,7 @@ export default function UserDashboard() {
             {(!loading) && Object.keys(todos).length > 0 && (
                 <>
                 <h2 className="text-lg font-semibold">Todos:</h2>
-                {Object.keys(todos).map((todoKey, i) => {
+                {Object.keys(todos).sort((a, b) => b - a).map((todoKey, i) => {
                     return (
                     <TodoCard 
                         handleEditTodo={handleEditTodo} 
