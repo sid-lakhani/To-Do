@@ -25,12 +25,10 @@ export default function useFetchTodos() {
                 }
             } catch (err) {
                 setError("Failed to load Todos")
-                console.log(err)
             } finally {
                 setLoading(false)
             }
         }
-        console.log('fetching data...')
         fetchData()
     }, [])
 
