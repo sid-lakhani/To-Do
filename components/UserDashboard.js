@@ -29,7 +29,6 @@ export default function UserDashboard() {
         await setDoc(userRef, {
             todos: newTodos
         }, { merge: true });
-        
         setTodo('');
     } 
     
@@ -43,7 +42,6 @@ export default function UserDashboard() {
         await setDoc(userRef, {
             todos: newTodos
         }, { merge: true });
-        
         setEdit(null);
         setEdittedValue('');
     }
