@@ -34,17 +34,20 @@ export default function UserDashboard() {
     
     async function handleEditTodo() {
         if (!edittedValue) { return }
-        const newKey = edit
-        const newTodos = { ...todos, [newKey]: edittedValue };
-        
-        setTodos(newTodos);
+        const newKey = edit;
+        const updatedTodos = { ...todos }
+        if (updatedTodos[newKey] !== undefined) {
+            updatedTodos[newKey] = edittedValue;
+        }
+        setTodos(updatedTodos);  
         const userRef = doc(db, 'users', currentUser.uid);
         await setDoc(userRef, {
-            todos: newTodos
+            todos: updatedTodos,
         }, { merge: true });
         setEdit(null);
         setEdittedValue('');
     }
+    
 
     function handleAddEdit(todoKey){
         return () => {
