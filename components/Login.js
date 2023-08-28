@@ -60,7 +60,8 @@ export default function Login() {
                 <button onClick={submitHandler} className='w-full max-w-[40ch] border border-white border-solid uppercase py-2 duration-300 relative after:absolute after:top-0 after:right-full after:bg-white after:z-10 after:w-full after:h-full overflow-hidden hover:after:translate-x-full after:duration-300 hover:text-slate-900'>
                     <h2 className='relative z-20 select-none'>SUBMIT</h2>
                 </button>
-                <h2 onClick={() => setIsLoggingIn(!isLoggingIn)} className='select-none duration-300 hover:scale-90 hover:opacity-50 cursor-pointer '> {!isLoggingIn ? 'Login' : 'Register'} </h2>
+                <h2 className='select-none underline capitalize'>{isLoggingIn ? 'Dont have an account?' : 'Have an account already?'}</h2>
+                <h2 onClick={() => setIsLoggingIn(!isLoggingIn)} className='select-none duration-300 hover:scale-110 hover:opacity-50 cursor-pointer '> {!isLoggingIn ? 'Login' : 'Register'} </h2>
             </div>
         </div>
     )
