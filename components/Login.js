@@ -5,6 +5,7 @@ import { signInWithPopup } from 'firebase/auth'
 export default function Login() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
     const [error, setError] = useState(null)
     const [isLoggingIn, setIsLoggingIn] = useState(true)
 
@@ -28,7 +29,7 @@ export default function Login() {
             submitHandler();
         }
     }
-    
+
     async function submitHandler() {
         if (!email || !password) {
             setError('Please enter email and password')
@@ -40,15 +41,19 @@ export default function Login() {
             } catch (err) {
                 setError('Incorrect email or password')
             }
-            return 
+            return
+        }
+        if (password !== confirmPassword) {
+            setError('Passwords do not match')
+            return
         }
         await signup(email, password)
     }
 
-    async function demoPass(){
+    async function demoPass() {
         if (isLoggingIn || !isLoggingIn) {
-            await login('demo@gmail.com','demo1234')
-            return 
+            await login('demo@gmail.com', 'demo1234')
+            return
         }
     }
 
@@ -59,33 +64,43 @@ export default function Login() {
                     {isLoggingIn ? 'Login' : 'Register'}
                 </h1>
                 {error && <div className='w-full max-w-[40ch] border-rose-300 border text-center select-none border-solid text-rose-400 py-2'>{error}</div>}
-                <input 
+                <input
                     value={email}
-                    id='email' 
-                    onChange={(e) => setEmail(e.target.value.toLowerCase())} 
-                    type="text" 
-                    placeholder='Email Address' 
-                    onKeyDown= {handleKeyDown} 
+                    id='email'
+                    onChange={(e) => setEmail(e.target.value.toLowerCase())}
+                    type="text"
+                    placeholder='Email Address'
+                    onKeyDown={handleKeyDown}
                     autoComplete='email'
                     className='outline-none duration-300 border-b-2 border-solid border-white focus:border-cyan-300 text-slate-900 select-none p-2 w-full max-w-[40ch]' />
-                <input 
-                    value={password} 
+                <input
+                    value={password}
                     id='password'
-                    onChange={(e) => setPassword(e.target.value)} 
-                    type="password" 
-                    placeholder='Password' 
-                    onKeyDown={handleKeyDown} 
+                    onChange={(e) => setPassword(e.target.value)}
+                    type="password"
+                    placeholder='Password'
+                    onKeyDown={handleKeyDown}
                     autoComplete="current-password"
                     className='outline-none duration-300 border-b-2 border-solid border-white focus:border-cyan-300 text-slate-900 select-none p-2 w-full max-w-[40ch]' />
-                
+                {!isLoggingIn && <input
+                    value={confirmPassword}
+                    id='password'
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    type="password"
+                    placeholder='Confirm Password'
+                    onKeyDown={handleKeyDown}
+                    className={`outline-none duration-300 border-b-2 border-solid ${confirmPassword !== password ? 'border-red-500' : 'border-white focus:border-cyan-300'
+                        } text-slate-900 select-none p-2 w-full max-w-[40ch]`}
+                />
+                }
                 <button onClick={submitHandler} className='w-full max-w-[40ch] border border-white border-solid uppercase py-2 duration-300 relative after:absolute after:top-0 after:right-full after:bg-white after:z-10 after:w-full after:h-full overflow-hidden hover:after:translate-x-full after:duration-300 hover:text-slate-900'>
                     <h2 className='relative z-20 select-none'>SUBMIT</h2>
                 </button>
                 <h2 className='select-none pt-1 underline capitalize'>{isLoggingIn ? 'Dont have an account?' : 'Have an account already?'}</h2>
                 <h2 onClick={() => setIsLoggingIn(!isLoggingIn)} className='select-none duration-300 hover:scale-110 hover:opacity-50 cursor-pointer '> {!isLoggingIn ? 'Login' : 'Register'} </h2>
                 <div className='pt-2'>
-                    <button 
-                        onClick={demoPass} 
+                    <button
+                        onClick={demoPass}
                         // onMouseEnter={() => setIsDropdownOpen(true)}
                         // onMouseLeave={() => setIsDropdownOpen(false)}
                         className='w-full max-w-[15ch] bg-white text-slate-900 uppercase p-2 duration-300 hover:opacity-60'>
