@@ -10,18 +10,18 @@ export default function Login() {
 
     const { login, signup, currentUser } = useAuth()
 
-    const demoDropDown = () => {
-        return (
-          <div className="absolute z-20 text-xs bg-slate-600 shadow-md rounded mt-2">
-            <ul className="py-1">
-              <li className="hover:bg-slate-300 px-4 py-2">Demo-Email: demo@gmail.com</li>
-              <li className="hover:bg-slate-300 px-4 py-2">Demo-Pass: demo1234</li>
-            </ul>
-          </div>
-        );
-      }
+    // const demoDropDown = () => {
+    //     return (
+    //       <div className="absolute z-20 text-xs bg-slate-600 shadow-md rounded mt-2">
+    //         <ul className="py-1">
+    //           <li className="hover:bg-slate-300 px-4 py-2">Demo-Email: demo@gmail.com</li>
+    //           <li className="hover:bg-slate-300 px-4 py-2">Demo-Pass: demo1234</li>
+    //         </ul>
+    //       </div>
+    //     );
+    //   }
 
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+    // const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
     function handleKeyDown(event) {
         if (event.key === 'Enter') {
@@ -85,14 +85,14 @@ export default function Login() {
                 <div className='pt-4'>
                     <button 
                         onClick={demoPass} 
-                        onMouseEnter={() => setIsDropdownOpen(true)}
-                        onMouseLeave={() => setIsDropdownOpen(false)}
+                        // onMouseEnter={() => setIsDropdownOpen(true)}
+                        // onMouseLeave={() => setIsDropdownOpen(false)}
                         className='w-full max-w-[15ch] bg-white text-slate-900 uppercase p-2 duration-300 hover:opacity-60'>
                         <h2 className='relative z-20 select-none'>
                             Demo Account
                         </h2>
                     </button>
-                    {isDropdownOpen && demoDropDown()}
+                    {/* {isDropdownOpen && demoDropDown()} */}
                 </div>
             </div>
         </div>
