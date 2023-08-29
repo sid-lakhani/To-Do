@@ -98,7 +98,7 @@ export default function Login() {
                 </button>
                 <h2 className='select-none pt-1 underline capitalize'>{isLoggingIn ? 'Dont have an account?' : 'Have an account already?'}</h2>
                 <h2 onClick={() => setIsLoggingIn(!isLoggingIn)} className='select-none duration-300 hover:scale-110 hover:opacity-50 cursor-pointer '> {!isLoggingIn ? 'Login' : 'Register'} </h2>
-                <div className='pt-2'>
+                {isLoggingIn && <div className='pt-2'>
                     <button
                         onClick={demoPass}
                         // onMouseEnter={() => setIsDropdownOpen(true)}
@@ -109,7 +109,7 @@ export default function Login() {
                         </h2>
                     </button>
                     {/* {isDropdownOpen && demoDropDown()} */}
-                </div>
+                </div>}
             </div>
         </div>
     )
