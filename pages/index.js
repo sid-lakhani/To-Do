@@ -1,6 +1,5 @@
 import Login from '@/components/Login'
 import Head from 'next/head'
-import Image from 'next/image'
 import { useAuth } from '../context/AuthContext'
 import UserDashboard from '@/components/UserDashboard'
 
